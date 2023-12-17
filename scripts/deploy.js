@@ -2,12 +2,12 @@ const hre = require("hardhat");
 
 async function main() {
   const StakingToken = await hre.ethers.getContractFactory("StakingToken");
-  const stakingtoken = await StakingToken.deploy("1000000000000000000000");
+  const stakingtoken = await StakingToken.deploy(1000000);
   await stakingtoken.deployed();
   console.log("Stake token deployed to ", stakingtoken.address);
 
   const RewardToken = await hre.ethers.getContractFactory("RewardToken");
-  const rewardtoken = await RewardToken.deploy("10000000000000000000000000000");
+  const rewardtoken = await RewardToken.deploy(1000000000000);
   await rewardtoken.deployed();
   console.log("Reward token deployed to ", rewardtoken.address);
 
