@@ -6,14 +6,15 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract Staking is ReentrancyGuard {
+    using SafeMath for uint256;
     IERC20 public s_stakingToken;
     IERC20 public s_rewardToken;
 
-    uint public constant REWARD_RATE = 10;
+    uint public constant REWARD_RATE = 1e18;
 
     uint private totalStakedTokens;
-    uint private rewardPerTokenStored;
-    uint private lastUpdatedTime;
+    uint public rewardPerTokenStored;
+    uint public lastUpdatedTime;
 
     mapping(address=>uint) public stakedBalance;
     mapping(address=>uint) public rewards;
@@ -33,13 +34,13 @@ contract Staking is ReentrancyGuard {
             return rewardPerTokenStored;
         }
 
-        uint totalTime = (block.timestamp) - lastUpdatedTime;
-        uint totalRewards = totalTime*REWARD_RATE;
-        return rewardPerTokenStored+(totalRewards/totalStakedTokens);
+        uint totalTime = (block.timestamp).sub(lastUpdatedTime);
+        uint totalRewards = totalTime.mul(REWARD_RATE);
+        return rewardPerTokenStored.add(totalRewards.mul(1e18).div(totalStakedTokens));
     }
 
     function earned(address account) public view returns(uint){
-        return (stakedBalance[account])*(rewardPerToken()-userRewardPerTokenPaid[account]);
+        return (stakedBalance[account]).mul(rewardPerToken().sub(userRewardPerTokenPaid[account])).div(1e18).add(rewards[account]);
     }
 
     modifier updateReward(address account){
@@ -52,8 +53,8 @@ contract Staking is ReentrancyGuard {
 
     function stake(uint amount) public nonReentrant updateReward(msg.sender){
         require(amount>0,"Amt must be greater than 0");
-        totalStakedTokens+=amount;
-        stakedBalance[msg.sender]+=amount;
+        totalStakedTokens = totalStakedTokens.add(amount);
+        stakedBalance[msg.sender] = stakedBalance[msg.sender].add(amount);
 
         emit Staked(msg.sender, amount);
 
@@ -63,8 +64,8 @@ contract Staking is ReentrancyGuard {
 
     function withdraw(uint amount) public nonReentrant updateReward(msg.sender){
         require(amount>0,"Amt must be greater than 0");
-        totalStakedTokens-=amount;
-        stakedBalance[msg.sender]-=amount;
+        totalStakedTokens = totalStakedTokens.sub(amount);
+        stakedBalance[msg.sender] = stakedBalance[msg.sender].sub(amount);
 
         emit Withdrawn(msg.sender, amount);
 

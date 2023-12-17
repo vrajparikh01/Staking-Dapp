@@ -9,10 +9,6 @@ contract RewardToken is ERC20, Ownable {
         ERC20("RewardToken", "RWT")
         Ownable()
     {
-         _mint(msg.sender, initialSupply);
-    }
-
-    function decimals() public pure override returns(uint8){
-        return 0;
+         _mint(msg.sender, initialSupply*10**18);
     }
 }
