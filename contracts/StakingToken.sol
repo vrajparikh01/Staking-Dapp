@@ -5,13 +5,11 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract StakingToken is ERC20, Ownable {
-    constructor(address initialOwner)
+    constructor(uint256 initialSupply)
         ERC20("StakingToken", "STK")
         Ownable()
-    {}
-
-    function mint(address to, uint256 amount) public onlyOwner {
-        _mint(to, amount);
+    {
+         _mint(msg.sender, initialSupply);
     }
 
     function decimals() public pure override returns(uint8){
