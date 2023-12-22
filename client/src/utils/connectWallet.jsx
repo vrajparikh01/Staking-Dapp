@@ -24,13 +24,13 @@ export const connectWallet = async()=>{
         }
 
         provider = new ethers.BrowserProvider(window.ethereum)
-        signer = provider.getSigner()
+        signer = await provider.getSigner()
 
         const stakingContractAddress = "0x7C8499627Ea24bb8B6Da6F06533369FeFeC9ca9e"
         const stakingTokenContractAddress = "0xd33af887b2b202b6Df21209DeA10549E7B3e7608"
 
-        stakingContract = new ethers.Contract(stakingContractAddress, stakingAbi, signer)
-        stakingTokenContract = new ethers.Contract(stakingTokenContractAddress, stakingTokenAbi, signer)
+        stakingContract = new Contract(stakingContractAddress, stakingAbi, signer)
+        stakingTokenContract = new Contract(stakingTokenContractAddress, stakingTokenAbi, signer)
 
         return {provider, selectedAccount, chainId, stakingContract, stakingTokenContract}
     } catch (error) {
