@@ -12,7 +12,8 @@ const EarnedReward = ()=>{
                 console.log(stakingContract, "contract")
                 const earnedAmtWei = await stakingContract.earned(selectedAccount)
                 const earnedAmt = ethers.formatUnits(earnedAmtWei.toString(),18)
-                setEarnedAmount(earnedAmt)
+                const roundedAmt = parseFloat(earnedAmt).toFixed(2)
+                setEarnedAmount(roundedAmt)
             } catch (error) {
                 console.error("Error fetching staked amount",error.message)
             }
