@@ -20,7 +20,7 @@ const RewardRate = ()=>{
     }, [stakingContract, selectedAccount])
 
     return(
-        <p>Staked Amount: {rewardRate} token/second</p>
+        <p>Reward Amount: {rewardRate} token/second</p>
     )
 }
 
