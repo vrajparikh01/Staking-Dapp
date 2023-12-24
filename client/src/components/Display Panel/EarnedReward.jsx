@@ -9,7 +9,6 @@ const EarnedReward = ()=>{
     useEffect(()=>{
         const fetchEarnedAmount = async()=>{
             try {
-                console.log(stakingContract, "contract")
                 const earnedAmtWei = await stakingContract.earned(selectedAccount)
                 const earnedAmt = ethers.formatUnits(earnedAmtWei.toString(),18)
                 const roundedAmt = parseFloat(earnedAmt).toFixed(2)
@@ -18,7 +17,11 @@ const EarnedReward = ()=>{
                 console.error("Error fetching staked amount",error.message)
             }
         }
-        stakingContract && fetchEarnedAmount()
+        const interval = setInterval(() => {
+            stakingContract && fetchEarnedAmount()
+        }, 20000);
+        return () => clearInterval(interval);
+        
     }, [stakingContract, selectedAccount])
 
     return(
