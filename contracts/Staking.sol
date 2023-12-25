@@ -64,6 +64,7 @@ contract Staking is ReentrancyGuard {
 
     function withdraw(uint amount) public nonReentrant updateReward(msg.sender){
         require(amount>0,"Amt must be greater than 0");
+        require(stakedBalance[msg.sender]>=amount,"Not enough staked amt");
         totalStakedTokens = totalStakedTokens.sub(amount);
         stakedBalance[msg.sender] = stakedBalance[msg.sender].sub(amount);
 
